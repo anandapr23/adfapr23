@@ -1,0 +1,29 @@
+{
+	"name": "TRIGGER_TB2TD",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "dynamic_sql2sqlCopy",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTableName": "TABLEB",
+					"destTableName": "TABLED"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 1,
+				"startTime": "2023-04-19T03:52:00Z",
+				"endTime": "2023-04-20T03:52:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

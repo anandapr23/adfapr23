@@ -1,0 +1,9 @@
+{
+	"name": "DF-Anandapr23",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5ff25e86-d58f-4b5c-a5a6-ca777bfb56bf",
+		"tenantId": "d532851c-0670-43bb-b12e-c17424932446"
+	}
+}

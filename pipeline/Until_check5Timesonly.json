@@ -1,0 +1,181 @@
+{
+	"name": "Until_check5Timesonly",
+	"properties": {
+		"activities": [
+			{
+				"name": "Until1",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(\nvariables('fileExists'),\ngreaterOrEquals(int(variables('IterationCount')), 5)\n)",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get Metadata1",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "Dynamic_input_File",
+									"type": "DatasetReference",
+									"parameters": {
+										"containerName": {
+											"value": "@pipeline().parameters.containerName",
+											"type": "Expression"
+										},
+										"folderName": {
+											"value": "@pipeline().parameters.folderName",
+											"type": "Expression"
+										},
+										"fileName": {
+											"value": "@pipeline().parameters.fileName",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"exists"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fileExists",
+								"value": {
+									"value": "@activity('Get Metadata1').output.exists",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Assign_Temp_ITeration",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "IterationCount_temp",
+								"value": {
+									"value": "@string(add(int(variables('IterationCount')),1))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Assign_Iteration",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Assign_Temp_ITeration",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "IterationCount",
+								"value": {
+									"value": "@variables('IterationCount_temp')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 10
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			},
+			{
+				"name": "SEND MESSAGE",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Until1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			}
+		],
+		"parameters": {
+			"containerName": {
+				"type": "string",
+				"defaultValue": "untilactivity"
+			},
+			"folderName": {
+				"type": "string",
+				"defaultValue": "Input"
+			},
+			"fileName": {
+				"type": "string",
+				"defaultValue": "Cus1.csv"
+			}
+		},
+		"variables": {
+			"fileExists": {
+				"type": "Boolean"
+			},
+			"IterationCount": {
+				"type": "String",
+				"defaultValue": "0"
+			},
+			"IterationCount_temp": {
+				"type": "String",
+				"defaultValue": "0"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-18T04:09:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,29 @@
+{
+	"name": "TRIGGER_TA2TC",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "dynamic_sql2sqlCopy",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTableName": "TABLEA",
+					"destTableName": "TABLEC"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 1,
+				"startTime": "2023-04-19T03:48:00Z",
+				"endTime": "2023-04-20T03:48:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

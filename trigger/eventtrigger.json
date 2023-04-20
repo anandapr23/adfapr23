@@ -1,0 +1,24 @@
+{
+	"name": "eventtrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "eventtrigger",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/eventtrigger/blobs/Input",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/7d19c70e-0197-4309-b973-dd0bccbfe8ea/resourceGroups/RG-AnandApr23/providers/Microsoft.Storage/storageAccounts/stganandapr23",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

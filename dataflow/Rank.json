@@ -1,0 +1,81 @@
+{
+	"name": "Rank",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Rank_input",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Outputdataset",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Outputdataset",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "rank1"
+				},
+				{
+					"name": "rank2"
+				},
+				{
+					"name": "rank3"
+				},
+				{
+					"name": "rank4"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          emp_id as string,",
+				"          Emp_name as string,",
+				"          Salary as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 rank(desc(Salary, true),",
+				"     output(Rank as long),",
+				"     dense: true) ~> rank1",
+				"source1 rank(desc(Emp_name, true),",
+				"     output(Rank_Casesensitive as long)) ~> rank2",
+				"rank1 rank(desc(Emp_name, true),",
+				"     caseInsensitive: true,",
+				"     output(Rank_caseinsentive as long),",
+				"     dense: true) ~> rank3",
+				"rank2 rank(desc(Emp_name, true),",
+				"     caseInsensitive: true,",
+				"     output(Case_insenitive as long)) ~> rank4",
+				"rank4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Rank.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1",
+				"rank3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['DenseRank.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink2"
+			]
+		}
+	}
+}
