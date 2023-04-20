@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "DF-Anandapr23"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"LS_PARAM_connectionString": {
+			"value": ""
+		},
+		"LS_SQLSERVER_connectionString": {
+			"value": ""
+		},
+		"SqlServer_Selfhosted_connectionString": {
+			"value": "Integrated Security=True;Data Source=DESKTOP-V27QD6P\\SQLEXPRESS;Initial Catalog=@{linkedService().dbName}"
+		},
+		"SqlServer_Selfhosted_password": {
+			"value": ""
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://Blobkeyanandapr23.vault.azure.net/"
+		},
+		"LS_KVBLOB_properties_typeProperties_connectionString_secretName": {
+			"value": "blobaccess"
+		},
+		"SqlServer_Selfhosted_properties_typeProperties_userName": {
+			"value": "Anand"
+		},
+		"TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_sourceTableName": {
+			"value": "TABLEA"
+		},
+		"TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_destTableName": {
+			"value": "TABLEC"
+		},
+		"TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_sourceTableName": {
+			"value": "TABLEB"
+		},
+		"TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_destTableName": {
+			"value": "TABLED"
+		},
+		"Tumbling_trigger_properties_pipeline_parameters_startDate": {
+			"value": "@trigger().outputs.windowStartTime"
+		},
+		"Tumbling_trigger_properties_pipeline_parameters_endDate": {
+			"value": "@trigger().outputs.windowEndTime"
+		},
+		"eventtrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/7d19c70e-0197-4309-b973-dd0bccbfe8ea/resourceGroups/RG-AnandApr23/providers/Microsoft.Storage/storageAccounts/stganandapr23"
+		}
+	}
+}

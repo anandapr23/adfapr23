@@ -1,0 +1,208 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DF-Anandapr23"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"LS_PARAM_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_PARAM'"
+		},
+		"LS_SQLSERVER_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_SQLSERVER'"
+		},
+		"SqlServer_Selfhosted_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer_Selfhosted'",
+			"defaultValue": "Integrated Security=True;Data Source=DESKTOP-V27QD6P\\SQLEXPRESS;Initial Catalog=@{linkedService().dbName}"
+		},
+		"SqlServer_Selfhosted_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServer_Selfhosted'"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://Blobkeyanandapr23.vault.azure.net/"
+		},
+		"LS_KVBLOB_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobaccess"
+		},
+		"SqlServer_Selfhosted_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "Anand"
+		},
+		"TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_sourceTableName": {
+			"type": "string",
+			"defaultValue": "TABLEA"
+		},
+		"TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_destTableName": {
+			"type": "string",
+			"defaultValue": "TABLEC"
+		},
+		"TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_sourceTableName": {
+			"type": "string",
+			"defaultValue": "TABLEB"
+		},
+		"TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_destTableName": {
+			"type": "string",
+			"defaultValue": "TABLED"
+		},
+		"Tumbling_trigger_properties_pipeline_parameters_startDate": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"Tumbling_trigger_properties_pipeline_parameters_endDate": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
+		},
+		"eventtrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/7d19c70e-0197-4309-b973-dd0bccbfe8ea/resourceGroups/RG-AnandApr23/providers/Microsoft.Storage/storageAccounts/stganandapr23"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "DF-Anandapr23_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"LS_PARAM_connectionString": {
+						"value": "[parameters('LS_PARAM_connectionString')]"
+					},
+					"LS_SQLSERVER_connectionString": {
+						"value": "[parameters('LS_SQLSERVER_connectionString')]"
+					},
+					"AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "DF-Anandapr23_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"SqlServer_Selfhosted_connectionString": {
+						"value": "[parameters('SqlServer_Selfhosted_connectionString')]"
+					},
+					"SqlServer_Selfhosted_password": {
+						"value": "[parameters('SqlServer_Selfhosted_password')]"
+					},
+					"LS_KVBLOB_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('LS_KVBLOB_properties_typeProperties_connectionString_secretName')]"
+					},
+					"SqlServer_Selfhosted_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServer_Selfhosted_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'DF-Anandapr23_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "DF-Anandapr23_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'DF-Anandapr23_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "DF-Anandapr23_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_sourceTableName": {
+						"value": "[parameters('TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_sourceTableName')]"
+					},
+					"TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_destTableName": {
+						"value": "[parameters('TRIGGER_TA2TC_properties_dynamic_sql2sqlCopy_parameters_destTableName')]"
+					},
+					"TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_sourceTableName": {
+						"value": "[parameters('TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_sourceTableName')]"
+					},
+					"TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_destTableName": {
+						"value": "[parameters('TRIGGER_TB2TD_properties_dynamic_sql2sqlCopy_parameters_destTableName')]"
+					},
+					"Tumbling_trigger_properties_pipeline_parameters_startDate": {
+						"value": "[parameters('Tumbling_trigger_properties_pipeline_parameters_startDate')]"
+					},
+					"Tumbling_trigger_properties_pipeline_parameters_endDate": {
+						"value": "[parameters('Tumbling_trigger_properties_pipeline_parameters_endDate')]"
+					},
+					"eventtrigger_properties_typeProperties_scope": {
+						"value": "[parameters('eventtrigger_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'DF-Anandapr23_ArmTemplate_2')]"
+			]
+		}
+	]
+}
