@@ -1,0 +1,158 @@
+{
+	"name": "SCD2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SCD2_BLOB_INPUT",
+						"type": "DatasetReference"
+					},
+					"name": "BLOBINPUT"
+				},
+				{
+					"dataset": {
+						"referenceName": "SCD2_SQL_INPUT",
+						"type": "DatasetReference"
+					},
+					"name": "SQLINPUT"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SCD2_SQL_INPUT",
+						"type": "DatasetReference"
+					},
+					"name": "SINKINSERT"
+				},
+				{
+					"dataset": {
+						"referenceName": "SCD2_SQL_INPUT",
+						"type": "DatasetReference"
+					},
+					"name": "SINKUPDATE"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "lookupInput"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "ALTER"
+				},
+				{
+					"name": "alterRow2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Empid as integer,",
+				"          Name as string,",
+				"          Designation as string,",
+				"          Eff_From as date 'dd-MM-yyyy'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> BLOBINPUT",
+				"source(output(",
+				"          ID as integer,",
+				"          Empid as integer,",
+				"          Name as string,",
+				"          Designation as string,",
+				"          Eff_From as date,",
+				"          Eff_To as date,",
+				"          Is_Active as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SQLINPUT",
+				"BLOBINPUT derive(Eff_To = toDate('2100-12-31'),",
+				"          Is_Active = \"Yes\") ~> derivedColumn1",
+				"BLOBINPUT select(mapColumn(",
+				"          Empid,",
+				"          BLOB_EFFECTIVEDATE = Eff_From",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> lookupInput",
+				"SQLINPUT, lookupInput lookup(SQLINPUT@Empid == lookupInput@Empid,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 filter(and(Is_Active == \"Yes\",!isNull(lookupInput@Empid))) ~> filter1",
+				"filter1 select(mapColumn(",
+				"          ID,",
+				"          Empid = SQLINPUT@Empid,",
+				"          Name,",
+				"          Designation,",
+				"          Eff_From,",
+				"          Is_Active,",
+				"          Eff_To = BLOB_EFFECTIVEDATE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(Is_Active = \"No\") ~> derivedColumn2",
+				"derivedColumn2 alterRow(updateIf(true())) ~> ALTER",
+				"derivedColumn1 alterRow(insertIf(true())) ~> alterRow2",
+				"alterRow2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID as integer,",
+				"          Empid as integer,",
+				"          Name as string,",
+				"          Designation as string,",
+				"          Eff_From as date,",
+				"          Eff_To as date,",
+				"          Is_Active as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SINKINSERT",
+				"ALTER sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID as integer,",
+				"          Empid as integer,",
+				"          Name as string,",
+				"          Designation as string,",
+				"          Eff_From as date,",
+				"          Eff_To as date,",
+				"          Is_Active as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['Empid'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SINKUPDATE"
+			]
+		}
+	}
+}
