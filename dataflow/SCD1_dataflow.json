@@ -1,0 +1,34 @@
+{
+	"name": "SCD1_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SCD1_BLOB_INPUT",
+						"type": "DatasetReference"
+					},
+					"name": "SCD1BLOB"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ID as integer,",
+				"          Name as string,",
+				"          Salary as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SCD1BLOB",
+				"SCD1BLOB alterRow(upsertIf(true())) ~> alterRow1"
+			]
+		}
+	}
+}
