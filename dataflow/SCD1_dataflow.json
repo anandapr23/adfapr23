@@ -10,6 +10,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "SCD1BLOB"
+				},
+				{
+					"dataset": {
+						"referenceName": "SCD1_BLOB_INPUT",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [
@@ -24,6 +31,15 @@
 			"transformations": [
 				{
 					"name": "alterRow1"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -35,7 +51,27 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> SCD1BLOB",
-				"SCD1BLOB alterRow(upsertIf(true())) ~> alterRow1",
+				"source(output(",
+				"          ID as integer,",
+				"          Name as string,",
+				"          Salary as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"select1 alterRow(upsertIf(true())) ~> alterRow1",
+				"SCD1BLOB, source1 union(byName: true)~> union1",
+				"union1 aggregate(groupBy(ID,",
+				"          Name,",
+				"          Salary),",
+				"     SUM_sal = avg(Salary)) ~> aggregate1",
+				"aggregate1 select(mapColumn(",
+				"          ID,",
+				"          Name,",
+				"          Salary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
