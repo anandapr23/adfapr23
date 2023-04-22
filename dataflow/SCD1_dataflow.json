@@ -12,7 +12,15 @@
 					"name": "SCD1BLOB"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SCD1_SQL_INPUT",
+						"type": "DatasetReference"
+					},
+					"name": "SQLUPDATE"
+				}
+			],
 			"transformations": [
 				{
 					"name": "alterRow1"
@@ -27,7 +35,23 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> SCD1BLOB",
-				"SCD1BLOB alterRow(upsertIf(true())) ~> alterRow1"
+				"SCD1BLOB alterRow(upsertIf(true())) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID as integer,",
+				"          Name as string,",
+				"          Salary as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['ID'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SQLUPDATE"
 			]
 		}
 	}
