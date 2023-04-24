@@ -51,7 +51,7 @@
 				"     composition: 'flowletfilter') ~> flowlet1@(output1)",
 				"flowlet1@output1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['flowletoutput1.csv'],",
+				"     partitionFileNames:['flowletGREATER6000.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1"
