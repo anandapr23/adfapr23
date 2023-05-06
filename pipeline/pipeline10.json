@@ -27,7 +27,7 @@
 						}
 					},
 					"sink": {
-						"type": "SqlServerSink",
+						"type": "AzureSqlSink",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
@@ -49,8 +49,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "selfhosted",
-						"type": "DatasetReference"
+						"referenceName": "dynamic_sql_dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "EMP_STAGING"
+						}
 					}
 				]
 			},
@@ -67,8 +70,41 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "selfhosted",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dynamic_sql_dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "EMP_STAGING"
+						}
+					}
+				]
 			}
 		],
 		"annotations": []
