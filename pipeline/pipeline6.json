@@ -27,17 +27,61 @@
 						}
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "ParquetSink",
 						"storeSettings": {
 							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".csv"
+							"type": "ParquetWriteSettings"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['firstName']"
+								},
+								"sink": {
+									"name": "firstName"
+								}
+							},
+							{
+								"source": {
+									"path": "['lastName']"
+								},
+								"sink": {
+									"name": "lastName"
+								}
+							},
+							{
+								"source": {
+									"path": "['gender']"
+								},
+								"sink": {
+									"name": "gender"
+								}
+							},
+							{
+								"source": {
+									"path": "['age']"
+								},
+								"sink": {
+									"name": "age"
+								}
+							},
+							{
+								"source": {
+									"path": "['number']"
+								},
+								"sink": {
+									"name": "number"
+								}
+							}
+						],
+						"collectionReference": "$['people']"
+					}
 				},
 				"inputs": [
 					{
@@ -47,7 +91,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "jsonoutput",
+						"referenceName": "Parquetoutput",
 						"type": "DatasetReference"
 					}
 				]
