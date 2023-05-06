@@ -1,0 +1,41 @@
+{
+	"name": "parquet_input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "sample4.parquet",
+				"container": "practice"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "firstName",
+				"type": "UTF8"
+			},
+			{
+				"name": "lastName",
+				"type": "UTF8"
+			},
+			{
+				"name": "gender",
+				"type": "UTF8"
+			},
+			{
+				"name": "age",
+				"type": "INT64"
+			},
+			{
+				"name": "number",
+				"type": "UTF8"
+			}
+		]
+	}
+}

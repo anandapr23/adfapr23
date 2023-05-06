@@ -1,0 +1,19 @@
+{
+	"name": "json2parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "practice"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

@@ -35,7 +35,85 @@
 							"fileExtension": ".csv"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['id']"
+								},
+								"sink": {
+									"name": "id"
+								}
+							},
+							{
+								"source": {
+									"path": "['title']"
+								},
+								"sink": {
+									"name": "title"
+								}
+							},
+							{
+								"source": {
+									"path": "['description']"
+								},
+								"sink": {
+									"name": "description"
+								}
+							},
+							{
+								"source": {
+									"path": "['price']"
+								},
+								"sink": {
+									"name": "price"
+								}
+							},
+							{
+								"source": {
+									"path": "['discountPercentage']"
+								},
+								"sink": {
+									"name": "discountPercentage"
+								}
+							},
+							{
+								"source": {
+									"path": "['rating']"
+								},
+								"sink": {
+									"name": "rating"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock']"
+								},
+								"sink": {
+									"name": "stock"
+								}
+							},
+							{
+								"source": {
+									"path": "['brand']"
+								},
+								"sink": {
+									"name": "brand"
+								}
+							},
+							{
+								"source": {
+									"path": "['category']"
+								},
+								"sink": {
+									"name": "category"
+								}
+							}
+						],
+						"collectionReference": "$['products']"
+					}
 				},
 				"inputs": [
 					{
